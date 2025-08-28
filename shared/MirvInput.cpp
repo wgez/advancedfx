@@ -16,6 +16,7 @@
 
 #undef min
 #undef max
+#include <algorithm>
 
 void MirvInput::Mem::Console(advancedfx::ICommandArgs * args)
 {
@@ -1141,6 +1142,8 @@ bool MirvInput::Override(float deltaT, float & Tx, float &Ty, float & Tz, float 
 		double dUp = dT * GetCamDUp();
 		double dPitch = dT * GetCamDPitch();
 		double dRoll = dT * GetCamDRoll();
+		// I believe this affects the freecam when it IS accelerating (smooth motion).
+		dRoll = 0.0; // Lock value Rx = 0.
 		double dYaw = dT * GetCamDYaw();
 		double dFov = dT * GetCamDFov();
 		double forward[3], right[3], up[3];
@@ -1164,6 +1167,9 @@ bool MirvInput::Override(float deltaT, float & Tx, float &Ty, float & Tz, float 
 			Rz = (float)newAngles.Roll;
 		} else {
 			Rx = (float)(m_InputRx + dPitch);
+			// I believe this affects the freecam when it IS accelerating (smooth motion).
+			// For some reason, this Rx is actually the rotation that looks up and down.
+			Rx = std::clamp(Rx, -89.900000f, 89.900000f);
 			Ry = (float)(m_InputRy + dYaw);
 			Rz = (float)(m_InputRz + dRoll);
 		}
@@ -1262,15 +1268,19 @@ bool MirvInput::Override(float deltaT, float & Tx, float &Ty, float & Tz, float 
 
 			Afx::Math::Quaternion targetQuat = Afx::Math::Quaternion::FromQREulerAngles(Afx::Math::QREulerAngles::FromQEulerAngles(Afx::Math::QEulerAngles(Rx, Ry, Rz))).Normalized();
 
-			if (m_RotShortestPath)
-			{
-				// Take shortest path:
-				double dotProduct = Afx::Math::DotProduct(targetQuat, m_LastOutQuat);
-				if (dotProduct < 0)
-				{
-					targetQuat = -1.0 * targetQuat;
-				}
-			}
+			// Removed this shortest path mechanic to alleviate the "bouncing" behavior that happens
+			// if you rotate too quickly. You'll still get weird behavior if you rotate very quickly,
+			// but it's a lot more tolerant than before.
+
+			//if (m_RotShortestPath)
+			//{
+			//	// Take shortest path:
+			//	double dotProduct = Afx::Math::DotProduct(targetQuat, m_LastOutQuat);
+			//	if (dotProduct < 0)
+			//	{
+			//		targetQuat = -1.0 * targetQuat;
+			//	}
+			//}
 
 			double targetAngle = m_LastOutQuat.GetAng(targetQuat, Afx::Math::Vector3()) * 180.0 / M_PI;
 			double angle = CalcDeltaExpSmooth(t, targetAngle);

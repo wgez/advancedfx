@@ -5,7 +5,7 @@ project ("hlae")
 set(hlae_VERSION_MAJOR 2)
 set(hlae_VERSION_MINOR 186)
 set(hlae_VERSION_PATCH 14)
-set(hlae_VERSION_REVISON 0)
+set(hlae_VERSION_REVISON 99)
 
 add_custom_target(hlae
     DEPENDS afxcppcli AfxHookGoldSrc AfxHookSource injector

@@ -8,6 +8,7 @@
 #include "RenderView.h"
 
 #include <shared/AfxMath.h>
+#include <algorithm>
 
 
 bool CMirvCam::ApplySource(float & x, float & y, float & z, float & xRotation, float & yRotation, float & zRotation)
@@ -40,12 +41,14 @@ bool CMirvCam::ApplySource(float & x, float & y, float & z, float & xRotation, f
 			if (m_SourceUseXRotation)
 			{
 				overriden = true;
-				xRotation = a.z;
+				//xRotation = a.z;
+				xRotation = 0.0;
 			}
 			if (m_SourceUseYRotation)
 			{
 				overriden = true;
 				yRotation = a.x;
+				yRotation = std::clamp(yRotation, -89.900000f, 89.900000f);
 			}
 			if (m_SourceUseZRotation)
 			{
@@ -89,6 +92,11 @@ bool CMirvCam::ApplyOffset(float & x, float & y, float & z, float & xRotation, f
 		zRotation = (float)angs.Yaw;
 	}
 
+	// I believe this affects the freecam when it's not accelerating.
+	xRotation = 0.0;
+	yRotation = std::clamp(yRotation, -89.900000f, 89.900000f);
+	// Limit to 89.9 degrees, because 89.9-90 doesn't work right (it snaps to angle at 90 for some reason)
+	
 	return overriden;
 }
 
