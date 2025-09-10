@@ -6,12 +6,13 @@
 <release>
 <name>HLAE</name>
 <version>2.186.14.99</version>
-<time>2025-08-28</time>
+<time>2025-09-10</time>
 <changes>
 <change type="updated">Included AfxHookSource 1.133.99.</change>
 <change type="updated">Disabled the freecam's ability to do twisting rotation (Rx = 0).</change>
 <change type="updated">Prevented the freecam from being able to do backflips and frontflips.</change>
 <change type="updated">Disabled shortest path mechanic to alleviate "bouncing" effect when rotating too quickly.</change>
+<change type="updated">Modified default halfTime value (smoothcam acceleration) to something more appropriate.</change>
 </changes>
 <comments>
 	These changes allow the smooth freecam to moreso reflect the behavior of TF2's Replay freecam.

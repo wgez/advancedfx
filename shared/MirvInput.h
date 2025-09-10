@@ -422,9 +422,9 @@ private:
 
 	double m_LastFov = 90.0;
 
-	double m_HalfTimeVec = 0.5;
-	double m_HalfTimeAng = 0.5;
-	double m_HalfTimeFov = 0.5;
+	double m_HalfTimeVec = 0.2;
+	double m_HalfTimeAng = 0.2;
+	double m_HalfTimeFov = 0.2;
 
 	bool m_RotShortestPath = true;
 
